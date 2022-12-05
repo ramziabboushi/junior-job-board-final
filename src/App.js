@@ -11,12 +11,19 @@ export default function App() {
 
   const [collectedJobs, setCollectedJobs] = useState([]);
 
+  function decode_utf8(s) {
+    return decodeURIComponent(escape(s));
+  }
+
   useEffect(() => {
     // fetch jobs from API
     fetch("https://remoteok.com/api?tag=dev")
       .then((res) => res.json())
       .then((data) => {
         let remoteJobs = data.slice(1);
+        remoteJobs.forEach(
+          (item) => (item.description = decode_utf8(item.description))
+        );
         setCollectedJobs(remoteJobs);
       });
   }, []);
